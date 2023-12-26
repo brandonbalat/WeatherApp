@@ -31,13 +31,28 @@ export const getVisibilityValue = (number: number): string => {
 
 export const getSunTime = (timestamp: number): string => {
   const date = new Date(timestamp * 1000)
-  let hours = date.getHours().toString()
+  var amPm = ""
+
+
+
+  let hours = date.getHours()
   let minutes = date.getMinutes().toString()
 
-  if (hours.length <= 1) hours = `0${hours}`
+
+  if (hours > 12) {
+    hours = hours - 12
+    amPm = "P.M."
+  } else {
+    amPm = "A.M."
+  }
+
+  let formattedHours = hours.toString()
+
+  if (formattedHours.length <= 1) formattedHours = `0${formattedHours}`
   if (minutes.length <= 1) minutes = `0${minutes}`
 
-  return `${hours}:${minutes}`
+
+  return `${formattedHours}:${minutes} ${amPm}`
 }
 
 export const getPop = (value: number): string => {
@@ -45,4 +60,12 @@ export const getPop = (value: number): string => {
   if (value > 0.33 && value <= 0.66) return 'Moderate probability'
 
   return 'High probability'
+}
+
+export const getStandardTime = (value: number): string => {
+  if (value <= 12) {
+    return value + " A.M."
+  } else {
+    return (value - 12) + " P.M."
+  }
 }

@@ -1,4 +1,4 @@
-import { getHumidityValue, getPop, getSunTime, getVisibilityValue, getWindDirection } from "../helpers"
+import { getHumidityValue, getPop, getSunTime, getVisibilityValue, getWindDirection, getStandardTime } from "../helpers"
 import { forecastType } from "../types"
 import Sunrise from "./Icons/Sunrise"
 import Sunset from "./Icons/Sunset"
@@ -35,7 +35,7 @@ const Forecast = ({ data }: Props): JSX.Element => {
                 <section className="flex overflow-x-scroll mt-3 pb-2 mb-5">
                     {data.list.map((item, i) => (
                         <div className="inline-block text-center w-[50px] flex-shrink-0" key={i}>
-                            <p className="text-sm">{i === 0 ? 'Now' : new Date(item.dt * 1000).getHours()}</p>
+                            <p className="text-sm">{i === 0 ? 'Now' : getStandardTime(new Date(item.dt * 1000).getHours())}</p>
                             <img alt={`weather-icon-${item.weather[0].description}`} src={`http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`} />
                             <p className="text-sm font-bold"><Degree temp={Math.round(item.main.temp)} /></p>
                         </div>
@@ -48,12 +48,12 @@ const Forecast = ({ data }: Props): JSX.Element => {
                     <div className="w-[140px] text-xs font-bold flex flex-col items-center bg-white/20 backdrop-blur-lg rounded drop-shadow-lg py-4 mb-5">
                         <Sunset /> <span className="mt-2">{getSunTime(data.sunset)}</span>
                     </div>
-                    <Tile icon="wind" title="Wind" info={`${Math.round(today.wind.speed)} km/h`} description={`${getWindDirection(Math.round(today.wind.deg))}, gusts ${today.wind.gust.toFixed(1)} km/h`} />
+                    <Tile icon="wind" title="Wind" info={`${Math.round(today.wind.speed * 0.6214)} MPH`} description={`${getWindDirection(Math.round(today.wind.deg))}, gusts ${(today.wind.gust * 0.6214).toFixed(1)} MPH`} />
                     <Tile icon="feels" title="Feels like" info={<Degree temp={Math.round(today.main.feels_like)} />} description={`Feels ${Math.round(today.main.feels_like) < Math.round(today.main.temp) ? 'colder' : 'warmer'}`} />
                     <Tile icon='humidity' title='Humidity' info={`${today.main.humidity} %`} description={getHumidityValue(today.main.humidity)} />
                     <Tile icon='pop' title='Precipitation' info={`${Math.round(today.pop * 1000)} %`} description={`${getPop(today.pop)}, clouds at ${today.clouds.all}%`} />
                     <Tile icon='pressure' title='Pressure' info={`${today.main.pressure} hPa`} description={`${Math.round(today.main.pressure) < 1013 ? 'Lower' : 'Higher'} than standard`} />
-                    <Tile icon='visibility' title='Visibility' info={`${(today.visibility / 1000).toFixed()} km`} description={getVisibilityValue(today.visibility)} />
+                    <Tile icon='visibility' title='Visibility' info={`${((today.visibility / 1000) * 0.6214).toFixed()} mi`} description={getVisibilityValue(today.visibility)} />
 
 
 
